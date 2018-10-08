@@ -101,4 +101,22 @@ defmodule Authenticate.Auth do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  def authenticate_user(id, password) do
+    query = from(u in User, where: u.email == ^id or u.username == ^id)
+    query |> Repo.one() |> verify_password(password)
+  end
+
+  defp verify_password(nil, _) do
+    {:error, "Login ID or password is invalid"}
+  end
+
+  defp verify_password(user, password) do
+    if Comeonin.Bcrypt.check_pass(password, user.password) do
+      {:ok, user}
+    else
+      {:error, "Login ID or password is invalid"}
+    end
+  end
+
 end

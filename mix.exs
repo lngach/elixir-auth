@@ -42,7 +42,7 @@ defmodule Authenticate.Mixfile do
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:faker, "~> 0.11", only: [:dev, :test]},
-      {:cors_plug, "~> 1.5"}
+      {:corsica, "~> 1.0"}
     ]
   end
 

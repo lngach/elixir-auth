@@ -3,7 +3,6 @@ defmodule AuthenticateWeb.Endpoint do
 
   socket "/socket", AuthenticateWeb.UserSocket
 
-  plug CORSPlug, origin: "*"
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -36,6 +35,13 @@ defmodule AuthenticateWeb.Endpoint do
     store: :cookie,
     key: "_authenticate_key",
     signing_salt: "+h6pDNog"
+
+    plug Corsica,
+      origins: "http://localhost:8080",
+      log: [rejected: :error, invalid: :warn, accepted: :debug],
+      allow_headers: ["content-type"],
+      allow_credentials: true
+
 
   plug AuthenticateWeb.Router
 
