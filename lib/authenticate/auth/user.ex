@@ -17,7 +17,8 @@ defmodule Authenticate.Auth.User do
     field :last_sign_in_ip, :string
     field :locked_at, :naive_datetime
     field :name, :string
-    field :password, :string
+    field :password, :string, virtual: true
+    field :encrypted_password, :string
     field :provider, :string
     field :reset_password_sent_at, :string
     field :reset_password_token, :string
@@ -32,8 +33,8 @@ defmodule Authenticate.Auth.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:provider, :uid, :password, :reset_password_token, :reset_password_sent_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip, :confirmation_token, :confirmed_at, :confirmation_sent_at, :failed_attempts, :locked_at, :disable, :name, :username, :image, :email, :tokens])
-    |> validate_required([:password, :name, :username, :image, :email])
+    |> cast(attrs, [:provider, :uid, :password , :encrypted_password, :reset_password_token, :reset_password_sent_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip, :confirmation_token, :confirmed_at, :confirmation_sent_at, :failed_attempts, :locked_at, :disable, :name, :username, :image, :email, :tokens])
+    |> validate_required([:name, :username, :image, :email, :password])
     |> unique_constraint(:email)
     |> unique_constraint(:username)
     |> unique_constraint(:uid, name: :users_uid_provider_index)
@@ -59,7 +60,7 @@ defmodule Authenticate.Auth.User do
   defp valid_password?(_), do: {:error, "The password is invalid"}
 
   defp encrypt_password(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
-    change(changeset, password: Comeonin.Bcrypt.hashpwsalt(password))
+    change(changeset, Comeonin.Bcrypt.add_hash(password))
   end
   defp encrypt_password(changeset), do: changeset
 
