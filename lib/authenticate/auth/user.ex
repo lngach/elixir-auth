@@ -1,6 +1,7 @@
 defmodule Authenticate.Auth.User do
   use Ecto.Schema
   import Ecto.Changeset
+  import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
 
   schema "users" do
@@ -18,6 +19,7 @@ defmodule Authenticate.Auth.User do
     field :locked_at, :naive_datetime
     field :name, :string
     field :password, :string, virtual: true
+    field :password_confirmation, :string, virtual: true
     field :encrypted_password, :string
     field :provider, :string
     field :reset_password_sent_at, :string
@@ -44,6 +46,7 @@ defmodule Authenticate.Auth.User do
     |> validate_format(:email, ~r/@/)
     |> validate_provider(:provider)
     |> validate_password(:password)
+    |> validate_confirmation(:password)
     |> encrypt_password()
   end
 
@@ -60,7 +63,7 @@ defmodule Authenticate.Auth.User do
   defp valid_password?(_), do: {:error, "The password is invalid"}
 
   defp encrypt_password(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
-    change(changeset, encrypted_password: Comeonin.Bcrypt.hashpwsalt(password))
+    change(changeset, encrypted_password: hashpwsalt(password))
   end
   defp encrypt_password(changeset), do: changeset
 
