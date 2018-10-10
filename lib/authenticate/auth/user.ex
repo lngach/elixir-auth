@@ -35,8 +35,8 @@ defmodule Authenticate.Auth.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:password, :name, :username, :image, :email, :provider, :uid])
-    |> validate_required([:name, :username, :image, :email, :password])
+    |> cast(attrs, [:password, :name, :username, :image, :email, :provider, :uid, :tokens])
+    |> validate_required([:name, :username, :image, :email])
     |> unique_constraint(:email)
     |> unique_constraint(:username)
     |> unique_constraint(:uid, name: :users_uid_provider_index)

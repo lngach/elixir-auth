@@ -5,7 +5,7 @@ defmodule Authenticate.Repo.Migrations.CreateUsers do
     create table(:users) do
       add :provider, :string, default: "email", null: false
       add :uid, :string, default: "", null: false
-      add :password, :string, default: "", null: false
+      add :encrypted_password, :string, default: "", null: false
       add :reset_password_token, :string
       add :reset_password_sent_at, :string
       add :sign_in_count, :integer, default: 0, null: false
@@ -16,7 +16,7 @@ defmodule Authenticate.Repo.Migrations.CreateUsers do
       add :confirmation_token, :string
       add :confirmed_at, :naive_datetime
       add :confirmation_sent_at, :naive_datetime
-      add :failed_attempts, :integer, defualt: 0, null: false
+      add :failed_attempts, :integer, default: 0, null: false
       add :locked_at, :naive_datetime
       add :disable, :boolean, default: false, null: false
       add :name, :string

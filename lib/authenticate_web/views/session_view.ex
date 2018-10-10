@@ -14,4 +14,14 @@ defmodule AuthenticateWeb.SessionView do
       }
     }
   end
+
+  def render("jwt.json", %{jwt: jwt}) do
+    %{
+      data: %{
+        access_token: jwt,
+        message: "Signed in successfully!"
+      }
+    }
+  end
+
 end

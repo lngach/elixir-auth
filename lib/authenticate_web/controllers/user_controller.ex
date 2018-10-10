@@ -12,13 +12,18 @@ defmodule AuthenticateWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Auth.create_user(user_params) do
+    with {:ok, %User{} = user} <- Auth.create_user(user_params)do
       conn
       |> put_status(:created)
       |> put_resp_header("location", user_path(conn, :show, user))
       |> render("show.json", user: user)
     end
   end
+
+  def profile(conn, _params) do
+    user = Guardian.Plug.current_resource(conn)
+    conn |> render("show.json", user: user)
+ end
 
   def show(conn, %{"id" => id}) do
     user = Auth.get_user!(id)

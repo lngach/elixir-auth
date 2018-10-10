@@ -22,6 +22,10 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
+config :authenticate, Authenticate.Guardian,
+        issuer: "authenticate",
+        secret_key: "kP9jILDVxzK9vuyFtR8FxKWwlX12v+OMZerdZOHUbejII2+5rbEYa8W3eJxnIHbq"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

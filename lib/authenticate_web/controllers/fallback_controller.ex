@@ -17,4 +17,11 @@ defmodule AuthenticateWeb.FallbackController do
     |> put_status(:not_found)
     |> render(AuthenticateWeb.ErrorView, :"404")
   end
+
+  def call(conn, {:error, :unauthorized, message}) do
+    conn
+    |> put_status(:unauthorized)
+    |> render(AuthenticateWeb.ErrorView, "401.json", message: message)
+  end
+
 end
