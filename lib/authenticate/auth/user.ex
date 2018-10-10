@@ -33,7 +33,7 @@ defmodule Authenticate.Auth.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:provider, :uid, :password , :encrypted_password, :reset_password_token, :reset_password_sent_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip, :confirmation_token, :confirmed_at, :confirmation_sent_at, :failed_attempts, :locked_at, :disable, :name, :username, :image, :email, :tokens])
+    |> cast(attrs, [:password, :name, :username, :image, :email, :provider, :uid])
     |> validate_required([:name, :username, :image, :email, :password])
     |> unique_constraint(:email)
     |> unique_constraint(:username)
@@ -42,7 +42,7 @@ defmodule Authenticate.Auth.User do
     |> unique_constraint(:reset_password_token)
     |> unique_constraint(:confirmation_token)
     |> validate_format(:email, ~r/@/)
-    # |> validate_provider(:provider)
+    |> validate_provider(:provider)
     |> validate_password(:password)
     |> encrypt_password()
   end
@@ -60,19 +60,19 @@ defmodule Authenticate.Auth.User do
   defp valid_password?(_), do: {:error, "The password is invalid"}
 
   defp encrypt_password(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
-    change(changeset, Comeonin.Bcrypt.add_hash(password))
+    change(changeset, encrypted_password: Comeonin.Bcrypt.hashpwsalt(password))
   end
   defp encrypt_password(changeset), do: changeset
 
-  # def validate_provider(changeset, field) do
-  #   validate_change(changeset, field, fn _, provider ->
-  #     if !valid_provider?(provider) do
-  #       email = elem(fetch_field(changeset, :email), 1)
-  #       change(changeset, provider: email)
-  #     end
-  #   end)
-  # end
+  defp validate_provider(%Ecto.Changeset{valid?: true, changes: %{email: email}} = changeset, field) do
+    validate_change(changeset, field, fn _, provider ->
+      if !valid_provider?(provider) do
+        change(changeset, provider: email)
+      end
+    end)
+  end
+  defp validate_provider(changeset), do: changeset
+  defp valid_provider?(_), do: false
 
-  # defp valid_provider?(_), do: false
 
 end

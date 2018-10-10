@@ -113,7 +113,7 @@ defmodule Authenticate.Auth do
   end
 
   defp verify_password(user, password) do
-    if Comeonin.Bcrypt.check_pass(user, password) do
+    if Comeonin.Bcrypt.checkpw(password, user.encrypted_password) do
       {:ok, user}
     else
       {:error, "Login ID or password is invalid"}
