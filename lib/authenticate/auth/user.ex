@@ -64,14 +64,13 @@ defmodule Authenticate.Auth.User do
   end
   defp encrypt_password(changeset), do: changeset
 
-  defp validate_provider(%Ecto.Changeset{valid?: true, changes: %{email: email}} = changeset, field) do
-    validate_change(changeset, field, fn _, provider ->
-      if !valid_provider?(provider) do
-        change(changeset, provider: email)
+  defp validate_provider(%Ecto.Changeset{valid?: true, changes: %{email: email}} = changeset, provider) do
+      case valid_provider?(provider) do
+        false -> change(changeset, provider: email)
       end
-    end)
   end
-  defp validate_provider(changeset), do: changeset
+  defp validate_provider(changeset, _field), do: changeset
+  defp valid_provider?(provider) when provider == "email", do: false
   defp valid_provider?(_), do: false
 
 

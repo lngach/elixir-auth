@@ -12,6 +12,7 @@ defmodule AuthenticateWeb.UserView do
 
   def render("user.json", %{user: user}) do
     %{id: user.id,
+      provider: user.provider,
       name: user.name,
       username: user.username,
       image: user.image,
