@@ -20,7 +20,7 @@ defmodule Authenticate.Mixfile do
   def application do
     [
       mod: {Authenticate.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :bamboo]
     ]
   end
 
@@ -43,7 +43,8 @@ defmodule Authenticate.Mixfile do
       {:bcrypt_elixir, "~> 1.0"},
       {:faker, "~> 0.11", only: [:dev, :test]},
       {:corsica, "~> 1.0"},
-      {:guardian, "~> 1.0"}
+      {:guardian, "~> 1.0"},
+      {:bamboo, github: "thoughtbot/bamboo"}
     ]
   end
 

@@ -44,3 +44,7 @@ config :authenticate, Authenticate.Repo,
   database: "authenticate_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :authenticate, Authenticate.Mailer,
+  adapter: Bamboo.LocalAdapter,
+  open_email_in_browser_url: "http://localhost:4000/sent_emails" # optional
