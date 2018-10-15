@@ -18,4 +18,13 @@ defmodule AuthenticateWeb.UserView do
       image: user.image,
       email: user.email}
   end
+
+  def render("forgot_password.json", %{message: message}) do
+    %{
+      data: %{
+        message: message
+      }
+    }
+  end
+
 end

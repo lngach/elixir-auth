@@ -19,6 +19,8 @@ defmodule AuthenticateWeb.Router do
     pipe_through [:api]
     resources "/users", UserController, only: [:create]
     post "/auth/sign_in", SessionController, :sign_in
+    get "/user/forgot_password", UserController, :forgot_password
+
   end
 
   if Mix.env == :dev do

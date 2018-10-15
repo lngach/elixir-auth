@@ -10,7 +10,7 @@ defmodule AuthenticateWeb.SessionController do
     case Authenticate.Auth.authenticate_user(id, password) do
       {:ok, user} ->
         with  {:ok, token, _claims} <- Guardian.encode_and_sign(user),
-              {:ok, %User{} = _user} <- Authenticate.Auth.update_user(user, %{tokens: token}) do
+              {:ok, %User{} = _user} <- Authenticate.Auth.update_user(user, %{tokens: token, sign_in_count: user.sign_in_count + 1}) do
           conn
           |> put_status(:ok)
           |> render(AuthenticateWeb.SessionView, "jwt.json", jwt: token)

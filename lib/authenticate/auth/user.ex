@@ -22,7 +22,7 @@ defmodule Authenticate.Auth.User do
     field :password_confirmation, :string, virtual: true
     field :encrypted_password, :string
     field :provider, :string
-    field :reset_password_sent_at, :string
+    field :reset_password_sent_at, :naive_datetime
     field :reset_password_token, :string
     field :sign_in_count, :integer
     field :tokens, :string
@@ -35,7 +35,7 @@ defmodule Authenticate.Auth.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:password, :name, :username, :image, :email, :provider, :uid, :tokens])
+    |> cast(attrs, [:password, :name, :username, :image, :email, :provider, :uid, :tokens, :reset_password_token, :reset_password_sent_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip])
     |> validate_required([:name, :username, :image, :email])
     |> unique_constraint(:email)
     |> unique_constraint(:username)

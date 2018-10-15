@@ -45,9 +45,16 @@ defmodule AuthenticateWeb.UserController do
     end
   end
 
-  def reset_password(conn, %{"email" => email}) do
-    case Auth.reset_password_user(email) do
-      {:ok, msg} -> {}
+  def forgot_password(conn, %{"email" => email}) do
+    case Auth.forgot_password_user(email) do
+      {:ok, user} ->
+        token     = Authenticate.StringGenerator.randstring(20)
+        sent_at   = NaiveDateTime.utc_now()
+        with {:ok, %User{} = user} <- Auth.update_user(user, %{reset_password_token: token, reset_password_sent_at: sent_at}) do
+          Authenticate.Email.forgot_password(user) |> Authenticate.Mailer.deliver_later
+          conn  |> put_status(:ok) |> render("forgot_password.json", message: "Email has been sent!")
+        end
+      {:error, msg} -> conn |> put_status(:not_found) |> render("forgot_password.json", message: msg)
     end
   end
 

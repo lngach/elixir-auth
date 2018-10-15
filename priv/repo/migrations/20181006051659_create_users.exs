@@ -7,7 +7,7 @@ defmodule Authenticate.Repo.Migrations.CreateUsers do
       add :uid, :string, default: "", null: false
       add :encrypted_password, :string, default: "", null: false
       add :reset_password_token, :string
-      add :reset_password_sent_at, :string
+      add :reset_password_sent_at, :naive_datetime
       add :sign_in_count, :integer, default: 0, null: false
       add :current_sign_in_at, :naive_datetime
       add :last_sign_in_at, :naive_datetime
