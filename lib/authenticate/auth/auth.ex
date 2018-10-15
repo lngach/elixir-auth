@@ -120,4 +120,19 @@ defmodule Authenticate.Auth do
     end
   end
 
+  def reset_password_user(email) do
+    query = from(u in User, where: u.email == ^email)
+    query |> Repo.one() |> reset_password()
+  end
+
+  def reset_password(nil), do: {:error, "User was locked or not found"}
+
+  def reset_password(user) do
+    token     = Authenticate.StringGenerator.randstring(20)
+    sent_at   = DateTime.utc_now()
+    with {:ok, %User{} = _user} <- update_user(user, %{reset_password_token: token, reset_password_sent_at: sent_at}) do
+      {:ok, "Email sent"}
+    end
+  end
+
 end

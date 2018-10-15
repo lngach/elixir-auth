@@ -44,4 +44,11 @@ defmodule AuthenticateWeb.UserController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def reset_password(conn, %{"email" => email}) do
+    case Auth.reset_password_user(email) do
+      {:ok, msg} -> {}
+    end
+  end
+
 end
