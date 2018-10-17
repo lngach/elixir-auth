@@ -104,19 +104,25 @@ defmodule Authenticate.Auth do
 
   def authenticate_user(id, password) do
     query = from(u in User, where: u.email == ^id or u.username == ^id)
-    query |> Repo.one() |> verify_password(password)
+    user = query |> Repo.one()
+    case user.disable do
+      true -> {:lock, "Your account has been locked!"}
+      false ->
+        user |> verify_password(password)
+    end
+
   end
 
   defp verify_password(nil, _) do
     Comeonin.Bcrypt.dummy_checkpw()
-    {:error, "Login ID or password is invalid"}
+    {:error, :not_found}
   end
 
   defp verify_password(user, password) do
     if Comeonin.Bcrypt.checkpw(password, user.encrypted_password) do
       {:ok, user}
     else
-      {:error, "Login ID or password is invalid"}
+      {:wrong_password, user}
     end
   end
 
