@@ -27,4 +27,20 @@ defmodule AuthenticateWeb.UserView do
     }
   end
 
+  def render("reset_password.json", %{message: message}) do
+    %{
+      data: %{
+        message: message
+      }
+    }
+  end
+
+  def render("confirm_reset_password.json", %{message: message}) do
+    %{
+      data: %{
+        message: message
+      }
+    }
+  end
+
 end

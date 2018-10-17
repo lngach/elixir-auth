@@ -58,4 +58,18 @@ defmodule AuthenticateWeb.UserController do
     end
   end
 
+  def reset_password(conn, %{"email" => email, "token" => reset_password_token}) do
+    case Auth.reset_password_user(email, reset_password_token) do
+      {:ok, _user} -> conn |> put_status(:ok) |> render("reset_password.json", message: "Valid reset password token")
+      {:error, msg} -> conn |> put_status(:not_found) |> render("reset_password.json", message: msg)
+    end
+  end
+
+  def confirm_reset_password(conn, %{"email" => email, "password" => password, "password_confirmation" => password_confirmation}) do
+    user = Auth.get_user_by_email!(email)
+    with {:ok, %User{} = _user} <- Auth.update_user(user, %{reset_password_token: nil, reset_password_sent_at: nil, password: password, password_confirmation: password_confirmation, tokens: nil}) do
+      conn |> put_status(:ok) |> render("confirm_reset_password.json", message: "Your password has been updated!")
+    end
+  end
+
 end

@@ -20,7 +20,8 @@ defmodule AuthenticateWeb.Router do
     resources "/users", UserController, only: [:create]
     post "/auth/sign_in", SessionController, :sign_in
     get "/user/forgot_password", UserController, :forgot_password
-
+    get "/user/reset_password", UserController, :reset_password
+    put "/user/confirm_reset_password", UserController, :confirm_reset_password
   end
 
   if Mix.env == :dev do

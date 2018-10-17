@@ -125,8 +125,26 @@ defmodule Authenticate.Auth do
     query |> Repo.one() |> forgot_password()
   end
 
-  def forgot_password(nil), do: {:error, "User was locked or not found"}
+  defp forgot_password(nil), do: {:error, "User was locked or not found"}
 
-  def forgot_password(user), do: {:ok, user}
+  defp forgot_password(user), do: {:ok, user}
+
+  def reset_password_user(email, reset_password_token) do
+    query = from(u in User, where: u.email == ^email)
+    query |> Repo.one() |> verify_token(reset_password_token)
+  end
+
+  defp verify_token(user, reset_password_token) do
+    if user.reset_password_token == reset_password_token and NaiveDateTime.diff(user.reset_password_sent_at, NaiveDateTime.utc_now()) <= 15*60 do
+      {:ok, user}
+    else
+      {:error, "Invalid token or token has expired!"}
+    end
+  end
+
+  def get_user_by_email!(email) do
+    Repo.get_by(User, email: email)
+  end
+
 
 end
