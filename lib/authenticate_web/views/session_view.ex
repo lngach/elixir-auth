@@ -24,4 +24,14 @@ defmodule AuthenticateWeb.SessionView do
     }
   end
 
+  def render("sign_in_failed.json", %{message: msg}) do
+    %{
+      data: %{
+        error: %{
+          message: msg
+        }
+      }
+    }
+  end
+
 end
