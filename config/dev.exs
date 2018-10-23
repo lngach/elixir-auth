@@ -40,7 +40,7 @@ config :phoenix, :stacktrace_depth, 20
 config :authenticate, Authenticate.Repo,
   adapter: Ecto.Adapters.MySQL,
   username: "root",
-  password: "",
+  password: "1103",
   database: "authenticate_dev",
   hostname: "localhost",
   pool_size: 10

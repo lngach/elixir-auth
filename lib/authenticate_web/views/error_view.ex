@@ -15,7 +15,7 @@ defmodule AuthenticateWeb.ErrorView do
   end
 
   def render("401.json", %{message: message}) do
-    %{errors: %{message: message}}
+    %{ data: %{errors: %{message: message}}}
   end
 
 end
